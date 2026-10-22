@@ -12,7 +12,7 @@ export const Route = createRootRoute({
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: APP_NAME },
       { name: "description", content: "Turn one community event into a run sheet, poster, newsletter and posts a lead approves." },
-      { name: "theme-color", content: "#0e4d4a" },
+      { name: "theme-color", content: "#313338" },
     ],
     links: [
       { rel: "icon", type: "image/svg+xml", href: "/favicon.svg" },
