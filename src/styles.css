@@ -3,17 +3,17 @@
 @theme {
   --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-  --color-paper: #313338;
-  --color-surface: #2b2d31;
-  --color-ink: #f2f3f5;
-  --color-muted: #b5bac1;
-  --color-line: #c7ccd1;
-  --color-teal: #1f8a8a;
-  --color-teal-soft: #1a3336;
-  --color-amber: #e3a15a;
-  --color-amber-soft: #3a2e22;
-  --color-on-teal: #f2f3f5;
-  --color-chip: #1e1f22;
+  --color-paper: #f3ecdf;
+  --color-surface: #faf6ef;
+  --color-ink: #2a312c;
+  --color-muted: #5e675f;
+  --color-line: #6a5e4e;
+  --color-teal: #1f4f6b;
+  --color-teal-soft: #d9e4ea;
+  --color-amber: #8a5a12;
+  --color-amber-soft: #f3e4d0;
+  --color-on-teal: #faf6ef;
+  --color-chip: #fffdf8;
 }
 
 @layer base {

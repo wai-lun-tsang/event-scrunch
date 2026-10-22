@@ -140,7 +140,7 @@ function FolderTab({
       aria-selected={active}
       className={
         active
-          ? "relative z-10 w-max shrink-0 rounded-t-lg border-2 border-b-[#2b2d31] bg-surface px-4 py-2 text-sm font-semibold whitespace-nowrap text-ink underline decoration-2 underline-offset-4"
+          ? "relative z-10 w-max shrink-0 rounded-t-lg border-2 border-b-[#faf6ef] bg-surface px-4 py-2 text-sm font-semibold whitespace-nowrap text-ink underline decoration-2 underline-offset-4"
           : "w-max shrink-0 rounded-t-lg border-2 border-ink bg-chip px-4 py-2 text-sm font-semibold whitespace-nowrap text-ink"
       }
     >
