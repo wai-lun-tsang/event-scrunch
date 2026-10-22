@@ -68,7 +68,12 @@ export function Shell({ children }: { children: ReactNode }) {
         <div className="mx-auto flex max-w-6xl flex-wrap items-end justify-between gap-3 px-4 py-4">
           <div>
             <p className="text-xs font-semibold tracking-[0.16em] text-muted uppercase">Community desk</p>
-            <Link to="/" hash="" className="font-display text-3xl leading-none text-ink">
+            <Link to="/" hash="" className="flex items-center gap-3 font-display text-3xl leading-none text-ink">
+              <img
+                src="/logos/sandwich.jpg"
+                alt=""
+                className="size-12 rounded-md border-2 border-ink object-cover"
+              />
               EventScrunch
             </Link>
           </div>
