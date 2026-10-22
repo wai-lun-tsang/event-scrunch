@@ -1,22 +1,19 @@
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate, useRouterState } from "@tanstack/react-router";
 import { useEffect, useState, type FormEvent } from "react";
 import { CalendarClock, Sparkles } from "lucide-react";
-import { Field, GhostButton, PrimaryButton, Shell, StatusMark, controlClass } from "@/components/desk-ui";
+import { Field, GhostButton, PrimaryButton, Shell, StatusMark, controlClass, isPastEvent } from "@/components/desk-ui";
 import {
   APPROVAL_KEYS,
   type Alcohol,
+  type CommunityEvent,
   type Digest,
   approvedCount,
   emptyBrief,
   formatIso,
   formatWhen,
   hoursLabel,
-  leadMinutes,
   pieceTotal,
-  savedMinutes,
   writeDigest,
-  DIGEST_MINUTES,
-  LEAD_MINUTES,
 } from "@/lib/domain";
 import { pullLumaWeek } from "@/lib/luma";
 import { polishCopy } from "@/lib/ai";
@@ -32,6 +29,8 @@ function Home() {
   const setDigest = useDesk((s) => s.setDigest);
   const setDigestApproval = useDesk((s) => s.setDigestApproval);
   const navigate = useNavigate();
+  const hash = useRouterState({ select: (s) => s.location.hash });
+  const showArchive = hash === "archive" || hash === "#archive";
 
   useEffect(() => {
     void hydrateDesk();
@@ -58,12 +57,10 @@ function Home() {
     );
   }
 
-  const writing = events.reduce((sum, event) => sum + savedMinutes(event), 0) + (digest ? DIGEST_MINUTES : 0);
-  const lead =
-    events.reduce((sum, event) => sum + leadMinutes(event), 0) + (digest && digest.approval === "draft" ? LEAD_MINUTES : 0);
-  const openApprovals =
-    events.reduce((sum, event) => sum + (APPROVAL_KEYS.length - approvedCount(event)), 0) +
-    (digest && digest.approval === "draft" ? 1 : 0);
+  const past = events
+    .filter((event) => isPastEvent(event.date))
+    .slice()
+    .sort((a, b) => b.date.localeCompare(a.date) || a.title.localeCompare(b.title));
 
   function build(form: FormEvent) {
     form.preventDefault();
@@ -127,16 +124,14 @@ function Home() {
 
   return (
     <Shell>
-      <section className="grid gap-3 sm:grid-cols-3">
-        <Stat kicker="Writing replaced" value={hoursLabel(writing)} detail="Drafted by the desk, not typed by a volunteer." />
-        <Stat kicker="Still on the lead" value={hoursLabel(lead)} detail={`${openApprovals} approval${openApprovals === 1 ? "" : "s"} left, about 2 min each.`} />
-        <Stat kicker="Packs on the desk" value={String(events.length)} detail="Each one is a full run sheet, not a note." />
-      </section>
-
-      <form onSubmit={build} className="mt-6 rounded-xl border border-line bg-surface p-4 sm:p-5">
+      {showArchive ? (
+        <Archive past={past} />
+      ) : (
+        <>
+      <form onSubmit={build} className="rounded-xl border-2 border-ink bg-paper p-4 sm:p-5">
         <div className="mb-4 flex items-start justify-between gap-3">
           <div>
-            <h1 className="font-display text-2xl">New event</h1>
+            <h1 className="font-display text-2xl">New social</h1>
             <p className="text-sm text-muted">A one-line idea is enough. The rest are the facts the pack must not invent.</p>
           </div>
         </div>
@@ -202,39 +197,7 @@ function Home() {
         </div>
       </form>
 
-      <section className="mt-8">
-        <h2 className="font-display text-2xl">On the desk</h2>
-        <ul className="mt-3 grid gap-3">
-          {events.map((event) => {
-            const done = approvedCount(event);
-            return (
-              <li key={event.id}>
-                <Link
-                  to="/events/$eventId"
-                  params={{ eventId: event.id }}
-                  className="block rounded-xl border border-line bg-surface p-4 hover:border-teal"
-                >
-                  <div className="flex flex-wrap items-start justify-between gap-2">
-                    <div>
-                      <h3 className="font-display text-xl">{event.title}</h3>
-                      <p className="text-sm text-muted">
-                        {formatWhen(event.date, event.start, event.end)} · {event.area || "Area to confirm"} · {event.capacity} seats
-                      </p>
-                    </div>
-                    <p className="text-sm font-semibold tabular-nums">
-                      {done} of {APPROVAL_KEYS.length} approved
-                    </p>
-                  </div>
-                  <p className="mt-2 text-sm text-muted">{hoursLabel(pieceTotal())} of writing replaced · {hoursLabel(leadMinutes(event))} left on you</p>
-                </Link>
-              </li>
-            );
-          })}
-          {events.length === 0 && <li className="text-sm text-muted">Nothing on the desk yet.</li>}
-        </ul>
-      </section>
-
-      <section className="mt-8 rounded-xl border border-line bg-surface p-4 sm:p-5">
+      <section className="mt-6 rounded-xl border-2 border-ink bg-paper p-4 sm:p-5">
         <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
             <h2 className="font-display text-2xl">Weekly digest</h2>
@@ -291,16 +254,58 @@ function Home() {
           </div>
         )}
       </section>
+        </>
+      )}
     </Shell>
   );
 }
 
-function Stat({ kicker, value, detail }: { kicker: string; value: string; detail: string }) {
+function Archive({ past }: { past: CommunityEvent[] }) {
+  const [index, setIndex] = useState(0);
+  const safe = past.length === 0 ? 0 : Math.min(index, past.length - 1);
+  const event = past[safe];
+
+  if (!event) {
+    return (
+      <div>
+        <h1 className="font-display text-2xl">Archive</h1>
+        <p className="mt-2 text-sm text-muted">No past socials yet. A social moves here the day after it happens.</p>
+      </div>
+    );
+  }
+
   return (
-    <article className="rounded-xl border border-line bg-surface p-4">
-      <p className="text-xs font-semibold tracking-[0.14em] text-teal uppercase">{kicker}</p>
-      <p className="mt-1 font-display text-3xl tabular-nums">{value}</p>
-      <p className="mt-1 text-sm text-muted">{detail}</p>
-    </article>
+    <div>
+      <div className="flex flex-wrap items-center justify-between gap-3">
+        <h1 className="font-display text-2xl">Archive</h1>
+        <p className="text-sm font-semibold tabular-nums">
+          {safe + 1} of {past.length}
+        </p>
+      </div>
+      <div className="mt-4 flex flex-wrap gap-2">
+        <GhostButton onClick={() => setIndex(safe - 1)} disabled={safe === 0}>
+          Previous social
+        </GhostButton>
+        <GhostButton onClick={() => setIndex(safe + 1)} disabled={safe === past.length - 1}>
+          Next social
+        </GhostButton>
+      </div>
+      <article className="mt-4 rounded-xl border-2 border-ink bg-paper p-4">
+        <h2 className="font-display text-3xl">{event.title}</h2>
+        <p className="mt-1 text-sm text-muted">
+          {formatWhen(event.date, event.start, event.end)} · {event.venue || "Venue to confirm"} · {event.area} · {event.capacity} seats
+        </p>
+        <p className="mt-3 text-sm">
+          {approvedCount(event)} of {APPROVAL_KEYS.length} pieces approved. {hoursLabel(pieceTotal())} of writing was replaced.
+        </p>
+        <Link
+          to="/events/$eventId"
+          params={{ eventId: event.id }}
+          className="mt-4 inline-flex min-h-11 items-center rounded-lg border-2 border-ink bg-surface px-4 text-sm font-semibold"
+        >
+          Open this pack
+        </Link>
+      </article>
+    </div>
   );
 }
