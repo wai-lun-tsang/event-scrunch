@@ -3,17 +3,17 @@
 @theme {
   --font-sans: "Source Sans 3", ui-sans-serif, system-ui, sans-serif;
   --font-display: "Fraunces", Georgia, "Times New Roman", serif;
-  --color-paper: #f3efe6;
-  --color-surface: #fffcf6;
-  --color-ink: #1c211c;
-  --color-muted: #3e463c;
-  --color-line: #ddd6c8;
-  --color-teal: #0e4d4a;
-  --color-teal-soft: #d5ebe4;
-  --color-amber: #9a4512;
-  --color-amber-soft: #f6e3d4;
-  --color-on-teal: #f6f3ea;
-  --color-chip: #e7e1d4;
+  --color-paper: #f3ecdf;
+  --color-surface: #faf6ef;
+  --color-ink: #2a312c;
+  --color-muted: #5e675f;
+  --color-line: #6a5e4e;
+  --color-teal: #1f4f6b;
+  --color-teal-soft: #d9e4ea;
+  --color-amber: #8a5a12;
+  --color-amber-soft: #f3e4d0;
+  --color-on-teal: #faf6ef;
+  --color-chip: #fffdf8;
 }
 
 @layer base {
@@ -47,8 +47,22 @@
   }
 
   :focus-visible {
-    outline: 2px solid var(--color-teal);
+    outline: 3px solid var(--color-ink);
     outline-offset: 2px;
+  }
+
+  button,
+  input,
+  select,
+  textarea {
+    border: 2px solid var(--color-ink);
+  }
+
+  input[type="checkbox"],
+  input[type="radio"] {
+    width: 1.15rem;
+    height: 1.15rem;
+    accent-color: var(--color-teal);
   }
 }
 
@@ -75,4 +89,18 @@
     animation: none !important;
     transition: none !important;
   }
+}
+
+/* Interaction borders sit above Tailwind's preflight reset. */
+button,
+input,
+select,
+textarea {
+  border: 2px solid var(--color-ink);
+}
+
+a[class*="border"] {
+  border-width: 2px;
+  border-style: solid;
+  border-color: var(--color-ink);
 }

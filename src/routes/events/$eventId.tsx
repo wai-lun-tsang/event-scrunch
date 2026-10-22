@@ -1,7 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import {
-  ArrowLeft,
   Ban,
   Check,
   Clock,
@@ -91,11 +90,7 @@ function EventDesk() {
 
   return (
     <Shell>
-      <Link to="/" className="inline-flex min-h-11 items-center gap-2 text-sm font-semibold text-teal">
-        <ArrowLeft className="size-4" aria-hidden="true" />
-        All events
-      </Link>
-      <div className="mt-2 flex flex-wrap items-start justify-between gap-3">
+      <div className="flex flex-wrap items-start justify-between gap-3">
         <div>
           <p className="text-xs font-semibold tracking-[0.16em] text-teal uppercase">{event.kind}</p>
           <h1 className="font-display text-4xl">{event.title}</h1>
@@ -151,8 +146,8 @@ function EventDesk() {
               onClick={() => setTab(item.id)}
               className={
                 selected
-                  ? "min-h-11 shrink-0 rounded-full bg-teal px-4 text-sm font-semibold text-on-teal"
-                  : "min-h-11 shrink-0 rounded-full border border-line bg-surface px-4 text-sm font-semibold text-ink"
+                  ? "min-h-11 shrink-0 rounded-lg border-2 border-ink bg-teal px-4 text-sm font-semibold text-on-teal underline decoration-2 underline-offset-4"
+                  : "min-h-11 shrink-0 rounded-lg border-2 border-ink bg-surface px-4 text-sm font-semibold text-ink"
               }
             >
               {item.label}
@@ -240,7 +235,7 @@ function BriefTab({ event, onRebuild, onDelete }: { event: CommunityEvent; onReb
         </div>
         <div className="mt-4 flex flex-wrap gap-2">
           <PrimaryButton onClick={onRebuild}>Rebuild drafts</PrimaryButton>
-          <Link to="/" onClick={onDelete} className="inline-flex min-h-11 items-center gap-2 rounded-lg border border-line px-4 text-sm font-semibold">
+          <Link to="/" onClick={onDelete} className="inline-flex min-h-11 items-center gap-2 rounded-lg border-2 border-ink bg-surface px-4 text-sm font-semibold">
             <Trash2 className="size-4" aria-hidden="true" />
             Remove from desk
           </Link>
@@ -262,7 +257,7 @@ function BriefTab({ event, onRebuild, onDelete }: { event: CommunityEvent; onReb
                 </p>
                 {row.notes && <p>{row.notes}</p>}
               </div>
-              <button type="button" className="min-h-11 px-2 text-sm font-semibold text-amber" onClick={() => removeInterest(event.id, row.id)}>
+              <button type="button" className="min-h-11 rounded-lg border-2 border-ink bg-surface px-3 text-sm font-semibold" onClick={() => removeInterest(event.id, row.id)}>
                 Remove
               </button>
             </li>
@@ -328,7 +323,7 @@ function BriefTab({ event, onRebuild, onDelete }: { event: CommunityEvent; onReb
               <span>
                 <span className="font-semibold">{row.vendor}</span> · {money(row.amount)} · {row.note}
               </span>
-              <button type="button" className="min-h-11 px-2 font-semibold text-amber" onClick={() => removeReceipt(event.id, row.id)}>
+              <button type="button" className="min-h-11 rounded-lg border-2 border-ink bg-surface px-3 text-sm font-semibold" onClick={() => removeReceipt(event.id, row.id)}>
                 Remove
               </button>
             </li>
@@ -562,14 +557,14 @@ function VisualTab({ event }: { event: CommunityEvent }) {
         <button
           type="button"
           onClick={() => setShape("story")}
-          className={shape === "story" ? "min-h-11 rounded-full bg-teal px-4 text-sm font-semibold text-on-teal" : "min-h-11 rounded-full border border-line px-4 text-sm font-semibold"}
+          className={shape === "story" ? "min-h-11 rounded-lg border-2 border-ink bg-teal px-4 text-sm font-semibold text-on-teal underline decoration-2 underline-offset-4" : "min-h-11 rounded-lg border-2 border-ink bg-surface px-4 text-sm font-semibold"}
         >
           Story
         </button>
         <button
           type="button"
           onClick={() => setShape("wide")}
-          className={shape === "wide" ? "min-h-11 rounded-full bg-teal px-4 text-sm font-semibold text-on-teal" : "min-h-11 rounded-full border border-line px-4 text-sm font-semibold"}
+          className={shape === "wide" ? "min-h-11 rounded-lg border-2 border-ink bg-teal px-4 text-sm font-semibold text-on-teal underline decoration-2 underline-offset-4" : "min-h-11 rounded-lg border-2 border-ink bg-surface px-4 text-sm font-semibold"}
         >
           Wide
         </button>
@@ -642,8 +637,8 @@ function NightTab({ event }: { event: CommunityEvent }) {
                       onClick={() => setGuestStatus(event.id, guest.id, action.status)}
                       className={
                         on
-                          ? "inline-flex min-h-11 items-center gap-1.5 rounded-full bg-teal px-3 text-sm font-semibold text-on-teal"
-                          : "inline-flex min-h-11 items-center gap-1.5 rounded-full border border-line px-3 text-sm font-semibold"
+                          ? "inline-flex min-h-11 items-center gap-1.5 rounded-lg border-2 border-ink bg-teal px-3 text-sm font-semibold text-on-teal underline decoration-2 underline-offset-4"
+                          : "inline-flex min-h-11 items-center gap-1.5 rounded-lg border-2 border-ink bg-surface px-3 text-sm font-semibold"
                       }
                     >
                       <Icon className="size-4" aria-hidden="true" />
